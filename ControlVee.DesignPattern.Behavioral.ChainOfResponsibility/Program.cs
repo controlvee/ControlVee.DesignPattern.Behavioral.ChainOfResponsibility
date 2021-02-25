@@ -1,7 +1,6 @@
 ﻿namespace ControlVee.DesignPattern.Behavioral.ChainOfResponsibility
 {
     using System;
-    using System.Text;
 
     static class Program
     {
@@ -19,15 +18,13 @@
             handlerLowPriority.SetSuccessor(handlerMediumPriority);
             handlerMediumPriority.SetSuccessor(handlerHighPriority);
 
-           
-
+            // Time a loop and create new random priority level.
             while (true)
             {
                 int randomPriorityLevel = r.Next(requestLevelMinValue, requestLevelMaxValue);
                 Program.RunDisplayTimer($"\r\n\n     Passing value {randomPriorityLevel} to Concrete Handler lvl Low.");
                 handlerLowPriority.HandleRequest(randomPriorityLevel);
                 Console.Clear();
-
             }
         }
 
@@ -39,7 +36,6 @@
             var backward = @"\";
 
             Console.WriteLine(baseMessage);
-            
 
             int i;
             for (i = 0; i < 2; i++)
