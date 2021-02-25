@@ -1,8 +1,9 @@
 ﻿namespace ControlVee.DesignPattern.Behavioral.ChainOfResponsibility
 {
     using System;
+    using System.Text;
 
-    class Program
+    static class Program
     {
         static void Main()
         {
@@ -18,32 +19,51 @@
             handlerLowPriority.SetSuccessor(handlerMediumPriority);
             handlerMediumPriority.SetSuccessor(handlerHighPriority);
 
+           
+
             while (true)
             {
-                handlerLowPriority.HandleRequest(r.Next(requestLevelMinValue, requestLevelMaxValue));
-                System.Threading.Thread.Sleep(4000);
+                int randomPriorityLevel = r.Next(requestLevelMinValue, requestLevelMaxValue);
+                Program.RunDisplayTimer($"\r\n\n     Passing value {randomPriorityLevel} to Concrete Handler lvl Low.");
+                handlerLowPriority.HandleRequest(randomPriorityLevel);
                 Console.Clear();
 
-                Console.WriteLine("Proccessing random numbers.");
-                System.Threading.Thread.Sleep(2000);
-                Console.WriteLine("Proccessing random numbers..");
-                Console.Clear();
-
-                Console.WriteLine("Proccessing random numbers...");
-                System.Threading.Thread.Sleep(2000);
-                Console.WriteLine("Proccessing random numbers....");
-                Console.Clear();
-
-                Console.WriteLine("Proccessing random numbers...");
-                System.Threading.Thread.Sleep(2000);
-                Console.WriteLine("Proccessing random numbers..");
-                Console.Clear();
-
-                Console.WriteLine("Proccessing random numbers.");
-                System.Threading.Thread.Sleep(2000);
-                Console.WriteLine("Proccessing random numbers");
-                Console.Clear();
             }
+        }
+
+        public static void RunDisplayTimer(string baseMessage)
+        {
+            var vertical = "|";
+            var forward = "/";
+            var horizontal = "_";
+            var backward = @"\";
+
+            Console.WriteLine(baseMessage);
+            
+
+            int i;
+            for (i = 0; i < 2; i++)
+            {
+                Console.Write($"\r\n\n     {vertical}");
+                System.Threading.Thread.Sleep(500);
+                ClearLastLine();
+                Console.Write($"\r\n\n     {forward}");
+                System.Threading.Thread.Sleep(500);
+                ClearLastLine();
+                Console.Write($"\r\n\n     {horizontal}");
+                System.Threading.Thread.Sleep(500);
+                ClearLastLine();
+                Console.Write($"\r\n\n     {backward}");
+                System.Threading.Thread.Sleep(500);
+                ClearLastLine();
+            }
+        }
+
+        public static void ClearLastLine()
+        {
+            Console.SetCursorPosition(0, Console.CursorTop - 1);
+            Console.Write(new string(' ', Console.BufferWidth));
+            Console.SetCursorPosition(0, Console.CursorTop - 1);
         }
     }
     
@@ -74,11 +94,12 @@
             if (request >= 0 && request < 10)
             {
                 // TODO: Study "this" keyword.
-                Console.WriteLine($"{this.GetType().Name} handled level: {request}");
+                Program.RunDisplayTimer($"\r\n\n     Concrete Handler Level Low handled lvl {request}");
             }
             else if (_successor != null)
             {
                 // TODO: How does this get passed to the other successors?
+                Program.RunDisplayTimer($"\r\n\n     Passing value {request} to Concrete Handler lvl Medium.");
                 _successor.HandleRequest(request);
             }
         }
@@ -90,10 +111,11 @@
         {
             if (request >= 10 && request < 20)
             {
-                Console.WriteLine($"{this.GetType().Name} handled level: {request}");
+                Program.RunDisplayTimer($"\r\n\n     Concrete Handler Level Medium handled lvl {request}");
             }
             else if (_successor != null)
             {
+                Program.RunDisplayTimer($"\r\n\n     Passing value {request} to Concrete Handler lvl High.");
                 _successor.HandleRequest(request);
             }
         }
@@ -105,10 +127,12 @@
         {
             if (request >= 20 && request < 30)
             {
-                Console.WriteLine($"{this.GetType().Name} handled level: {request}");
+                Program.RunDisplayTimer($"\r\n\n     Concrete Handler Level High handled lvl {request}");
             }
             else if (_successor != null) 
             {
+                // TODO: Why does highest successor need this?
+                Program.RunDisplayTimer($"\r\n\n");
                 _successor.HandleRequest(request);
             }
         }
