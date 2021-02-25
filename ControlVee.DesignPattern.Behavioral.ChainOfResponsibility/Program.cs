@@ -93,7 +93,6 @@
         {
             if (request >= 0 && request < 10)
             {
-                // TODO: Study "this" keyword.
                 Program.RunDisplayTimer($"\r\n\n     Concrete Handler Level Low handled lvl {request}");
             }
             else if (_successor != null)
