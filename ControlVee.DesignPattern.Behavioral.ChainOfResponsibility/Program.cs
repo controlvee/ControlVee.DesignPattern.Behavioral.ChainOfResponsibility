@@ -8,7 +8,7 @@
         {
             Random r = new Random();
             int requestLevelMinValue = 0;
-            int requestLevelMaxValue = 30;
+            int requestLevelMaxValue = 45;
 
             // Build the actual chain of responsibility (CoR).
             Handler handlerLowPriority = new ConcreteHandlerLevelLow();
@@ -124,11 +124,9 @@
             {
                 Program.RunDisplayTimer($"\r\n\n     Concrete Handler Level High handled lvl {request}");
             }
-            else if (_successor != null) 
+            else
             {
-                // TODO: Why does highest successor need this?
-                Program.RunDisplayTimer($"\r\n\n");
-                _successor.HandleRequest(request);
+                Program.RunDisplayTimer($"\r\n\n     Value too high for handlers!");
             }
         }
     }
