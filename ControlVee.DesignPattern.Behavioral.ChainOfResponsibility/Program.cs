@@ -6,6 +6,44 @@
     {
         static void Main()
         {
+            Random r = new Random();
+            int requestLevelMinValue = 0;
+            int requestLevelMaxValue = 30;
+
+            // Build the actual chain of responsibility (CoR).
+            Handler handlerLowPriority = new ConcreteHandlerLevelLow();
+            Handler handlerMediumPriority = new ConcreteHandlerLevelMedium();
+            Handler handlerHighPriority = new ConcreteHandlerLevelHigh();
+
+            handlerLowPriority.SetSuccessor(handlerMediumPriority);
+            handlerMediumPriority.SetSuccessor(handlerHighPriority);
+
+            while (true)
+            {
+                handlerLowPriority.HandleRequest(r.Next(requestLevelMinValue, requestLevelMaxValue));
+                System.Threading.Thread.Sleep(4000);
+                Console.Clear();
+
+                Console.WriteLine("Proccessing random numbers.");
+                System.Threading.Thread.Sleep(2000);
+                Console.WriteLine("Proccessing random numbers..");
+                Console.Clear();
+
+                Console.WriteLine("Proccessing random numbers...");
+                System.Threading.Thread.Sleep(2000);
+                Console.WriteLine("Proccessing random numbers....");
+                Console.Clear();
+
+                Console.WriteLine("Proccessing random numbers...");
+                System.Threading.Thread.Sleep(2000);
+                Console.WriteLine("Proccessing random numbers..");
+                Console.Clear();
+
+                Console.WriteLine("Proccessing random numbers.");
+                System.Threading.Thread.Sleep(2000);
+                Console.WriteLine("Proccessing random numbers");
+                Console.Clear();
+            }
         }
     }
     
@@ -16,17 +54,16 @@
     // they are allowed to handle.
     abstract class Handler
     {
-        // Study this field.
-        // Why protected?
+        // TODO: Study this field - why protected?
         protected Handler _successor;
 
         public void SetSuccessor(Handler successor)
         {
-            // _successor instead of this.successor?
+            // TODO: _successor instead of this.successor?
             _successor = successor;
         }
 
-        // Why is this abstract and the other method not?
+        // TODO: Why is this abstract and the other method not?
         public abstract void HandleRequest(int request);
     }
 
@@ -36,12 +73,42 @@
         {
             if (request >= 0 && request < 10)
             {
-                // Study "this" keyword.
+                // TODO: Study "this" keyword.
                 Console.WriteLine($"{this.GetType().Name} handled level: {request}");
             }
-            else if (!(_successor.Equals(null))) // vs if (_successor != null){}
+            else if (_successor != null)
             {
-                // How does this get passed to the other successors?
+                // TODO: How does this get passed to the other successors?
+                _successor.HandleRequest(request);
+            }
+        }
+    }
+
+    class ConcreteHandlerLevelMedium: Handler
+    {
+        public override void HandleRequest(int request)
+        {
+            if (request >= 10 && request < 20)
+            {
+                Console.WriteLine($"{this.GetType().Name} handled level: {request}");
+            }
+            else if (_successor != null)
+            {
+                _successor.HandleRequest(request);
+            }
+        }
+    }
+
+    class ConcreteHandlerLevelHigh : Handler
+    {
+        public override void HandleRequest(int request)
+        {
+            if (request >= 20 && request < 30)
+            {
+                Console.WriteLine($"{this.GetType().Name} handled level: {request}");
+            }
+            else if (_successor != null) 
+            {
                 _successor.HandleRequest(request);
             }
         }
