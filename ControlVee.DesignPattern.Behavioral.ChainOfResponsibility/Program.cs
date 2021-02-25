@@ -19,7 +19,6 @@
 
                 Client (ChainApp)
                     - initiates the request to a ConcreteHandler object on the chain 
-
     */
     /// </summary>
     static class Program
