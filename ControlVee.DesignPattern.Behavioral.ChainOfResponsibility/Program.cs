@@ -8,7 +8,7 @@
         {
             Random r = new Random();
             int requestLevelMinValue = 0;
-            int requestLevelMaxValue = 45;
+            int requestLevelMaxValue = 55;
 
             // Build the actual chain of responsibility (CoR).
             Handler handlerLowPriority = new ConcreteHandlerLevelLow();
@@ -22,7 +22,7 @@
             while (true)
             {
                 int randomPriorityLevel = r.Next(requestLevelMinValue, requestLevelMaxValue);
-                Program.RunDisplayTimer($"\r\n\n     Passing value {randomPriorityLevel} to Concrete Handler lvl Low.");
+                Program.RunDisplayTimer($"{CreatePadding()} Passing {randomPriorityLevel} to Priority Handler lvl Low");
                 handlerLowPriority.HandleRequest(randomPriorityLevel);
                 Console.Clear();
             }
@@ -40,16 +40,16 @@
             int i;
             for (i = 0; i < 2; i++)
             {
-                Console.Write($"\r\n\n     {vertical}");
+                Console.Write($"{CreatePadding()} {vertical}");
                 System.Threading.Thread.Sleep(500);
                 ClearLastLine();
-                Console.Write($"\r\n\n     {forward}");
+                Console.Write($"{CreatePadding()} {forward}");
                 System.Threading.Thread.Sleep(500);
                 ClearLastLine();
-                Console.Write($"\r\n\n     {horizontal}");
+                Console.Write($"{CreatePadding()} {horizontal}");
                 System.Threading.Thread.Sleep(500);
                 ClearLastLine();
-                Console.Write($"\r\n\n     {backward}");
+                Console.Write($"{CreatePadding()} {backward}");
                 System.Threading.Thread.Sleep(500);
                 ClearLastLine();
             }
@@ -60,6 +60,11 @@
             Console.SetCursorPosition(0, Console.CursorTop - 1);
             Console.Write(new string(' ', Console.BufferWidth));
             Console.SetCursorPosition(0, Console.CursorTop - 1);
+        }
+
+        public static string CreatePadding()
+        {
+            return $"\r\n\n     ";
         }
     }
     
@@ -89,28 +94,32 @@
         {
             if (request >= 0 && request < 10)
             {
-                Program.RunDisplayTimer($"\r\n\n     Concrete Handler Level Low handled lvl {request}");
+                Program.RunDisplayTimer($"{Program.CreatePadding()} Priority Handler Level Low handled lvl {request}");
             }
             else if (_successor != null)
             {
                 // TODO: How does this get passed to the other successors?
-                Program.RunDisplayTimer($"\r\n\n     Passing value {request} to Concrete Handler lvl Medium.");
+                Program.RunDisplayTimer($"{Program.CreatePadding()} Value too high for handler" +
+                    $"{Program.CreatePadding()} Passing {request} to Priority Handler lvl Medium");
+
                 _successor.HandleRequest(request);
             }
         }
     }
 
-    class ConcreteHandlerLevelMedium: Handler
+    class ConcreteHandlerLevelMedium : Handler
     {
         public override void HandleRequest(int request)
         {
             if (request >= 10 && request < 20)
             {
-                Program.RunDisplayTimer($"\r\n\n     Concrete Handler Level Medium handled lvl {request}");
+                Program.RunDisplayTimer($"{Program.CreatePadding()} Priority Handler Level Medium handled lvl {request}");
             }
             else if (_successor != null)
             {
-                Program.RunDisplayTimer($"\r\n\n     Passing value {request} to Concrete Handler lvl High.");
+                Program.RunDisplayTimer($"{Program.CreatePadding()} Value too high for handler" +
+                    $"{Program.CreatePadding()} Passing {request} to Priority Handler lvl High");
+
                 _successor.HandleRequest(request);
             }
         }
@@ -122,11 +131,11 @@
         {
             if (request >= 20 && request < 30)
             {
-                Program.RunDisplayTimer($"\r\n\n     Concrete Handler Level High handled lvl {request}");
+                Program.RunDisplayTimer($"{Program.CreatePadding()} Priority Handler Level High handled lvl {request}");
             }
             else
             {
-                Program.RunDisplayTimer($"\r\n\n     Value too high for handlers!");
+                Program.RunDisplayTimer($"{Program.CreatePadding()} Value too high for all handlers");
             }
         }
     }
